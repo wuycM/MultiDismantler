@@ -1,1 +1,1 @@
-# Deep-learning-aided-dismantling-of-interdependent-networks
+# Deep-learning-aided dismantling of interdependent networks
