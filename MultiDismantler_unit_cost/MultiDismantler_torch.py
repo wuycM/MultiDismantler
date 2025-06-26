@@ -21,14 +21,11 @@ import os
 import pandas as pd
 import os.path
 from torch.autograd import Variable
-from MultiDismantler_net_graphsage import MultiDismantler_net
+from MultiDismantler_net import MultiDismantler_net
 import os,sys
 import math
+from mutil_layer_weight import BitwiseMultipyLogis
 os.chdir(sys.path[0])
-
-from MRGNN.encoders import Encoder
-from MRGNN.mutil_layer_weight import LayerNodeAttention_weight, Cosine_similarity, SemanticAttention, BitwiseMultipyLogis
-from MRGNN.aggregators import MeanAggregator, LSTMAggregator, PoolAggregator
 # Hyper Parameters:
 GAMMA = 1  # decay rate of past observations
 UPDATE_TIME = 1000
@@ -325,41 +322,6 @@ class MultiDismantler:
         else:
             return self.fit(sample.g_list, sample.list_st, sample.list_at,list_target, sample.list_st_edges)
 
-    def fit_with_prioritized(self,tree_idx,ISWeights,g_list,covered,actions,list_target):
-        '''
-        loss = 0.0
-        n_graphs = len(g_list)
-        i, j, bsize
-        for i in range(0,n_graphs,BATCH_SIZE):
-            bsize = BATCH_SIZE
-            if (i + BATCH_SIZE) > n_graphs:
-                bsize = n_graphs - i
-            batch_idxes = np.zeros(bsize)
-            # batch_idxes = []
-            for j in range(i, i + bsize):
-                batch_idxes[j-i] = j
-                # batch_idxes.append(j)
-            batch_idxes = np.int32(batch_idxes)
-
-            self.SetupTrain(batch_idxes, g_list, covered, actions,list_target)
-            my_dict = {}
-            my_dict[self.action_select] = self.inputs['action_select']
-            my_dict[self.rep_global] = self.inputs['rep_global']
-            my_dict[self.n2nsum_param] = self.inputs['n2nsum_param']
-            my_dict[self.laplacian_param] = self.inputs['laplacian_param']
-            my_dict[self.subgsum_param] = self.inputs['subgsum_param']
-            my_dict[self.aux_input] = np.array(self.inputs['aux_input'])
-            my_dict[self.ISWeights] = np.mat(ISWeights).T
-            my_dict[self.target] = self.inputs['target']
-
-            result = self.session.run([self.trainStep,self.TD_errors,self.loss],feed_dict=my_dict)
-            self.nStepReplayMem.batch_update(tree_idx, result[1])
-            loss += result[2]*bsize
-        return loss / len(g_list)
-        '''
-        return None
-
-
     def fit(self,g_list,covered,actions,list_target,remove_edges):
         loss_values = 0.0
         n_graphs = len(g_list)
@@ -390,9 +352,6 @@ class MultiDismantler:
         return loss_values / len(g_list)
 
     def calc_loss(self, q_pred, cur_message_layer) :
-        # first order reconstruction loss
-        # OLD loss_recons = 2 * torch.trace(torch.matmul(torch.transpose(cur_message_layer,0,1),\
-        #    torch.matmul(self.inputs['laplacian_param'], cur_message_layer)))
         loss = torch.zeros(1,device=self.device)
         loss1 = torch.zeros(1,device=self.device)
         loss2 = torch.zeros(1,device=self.device)
@@ -407,8 +366,6 @@ class MultiDismantler:
             loss_recons = torch.divide(loss_recons, edge_num)                  
             loss2 = torch.add(loss2,loss_recons)
         loss1 = torch.add(loss1,self.loss(self.inputs['target'], q_pred))
-        # with open('loss_30-50_woCLA.txt', 'a') as f:
-        #     f.write("{} {}\n".format(loss1.item(), loss2.item()))
         loss = torch.add(loss1, loss2, alpha = Alpha)
         return loss
 
@@ -423,7 +380,7 @@ class MultiDismantler:
         eps_step = 10000.0
         loss = 0
 
-        save_dir = './models/g0-1_10w_TORCH-Model_%s_%s_%s'%(self.g_type,NUM_MIN, NUM_MAX)
+        save_dir = './models/test_g0.5_TORCH-Model_%s_%s_%s'%(self.g_type,NUM_MIN, NUM_MAX)
         if not os.path.exists(save_dir):
             os.mkdir(save_dir)
         VCFile = '%s/ModelVC_%d_%d.csv'%(save_dir, NUM_MIN, NUM_MAX)
@@ -519,13 +476,6 @@ class MultiDismantler:
         for i in tqdm(range(n_test)):
             adj1 = np.load(f"../../data/synthetic/{data_type}/syn_%s/adj1_%s.npy"%(data_test_name,i))
             adj2 = np.load(f"../../data/synthetic/{data_type}/syn_%s/adj2_%s.npy"%(data_test_name,i))
-            # g = self.gen_graph(int(data_test_name), int(data_test_name))
-            # if not os.path.exists(f"./{data_type}/syn_%s"%data_test_name):
-            #     os.makedirs(f"./{data_type}/syn_%s"%data_test_name, exist_ok=True)
-            # adj1 = self.adj_list_to_adj(g.adj_list[0])
-            # # np.save("./data_k/syn_%s/adj1_%s"%(data_test_name,i),adj1)
-            # adj2 = self.adj_list_to_adj(g.adj_list[1])
-            # # np.save("./data_k/syn_%s/adj2_%s"%(data_test_name,i),adj2)
             G1 = nx.from_numpy_array(adj1)
             G2 = nx.from_numpy_array(adj2)
             g = graph.Graph_test(G1,G2)
@@ -598,21 +548,6 @@ class MultiDismantler:
         layers_matrix, graphs = self.read_multiplex(
         "../../data/real/%s"%(test_name),num_nodes)
         g = graph.Graph_test(graphs[layers[0]-1],graphs[layers[1]-1])
-        # adj1 = np.array([[0,1,1,0,0,0],
-        #                 [1,0,1,1,1,1],
-        #                 [1,1,0,1,1,1],
-        #                 [0,1,1,0,1,0],
-        #                 [0,1,1,1,0,1],
-        #                 [0,1,1,0,1,0]])      
-        # adj2 = np.array([[0,1,1,0,1,0],
-        #                 [1,0,0,1,0,1],
-        #                 [1,0,0,0,0,1],
-        #                 [0,1,0,0,1,0],
-        #                 [1,0,0,1,0,0],
-        #                 [0,1,1,0,0,0]])
-        #G1 = nx.from_numpy_matrix(adj1)
-        #G2 = nx.from_numpy_matrix(adj2)
-        #g = graph.Graph_test(G1,G2)
         Mcc_average = [0] * g.num_nodes
         result_list_score = []
         with open(result_file1, 'w') as f_out:

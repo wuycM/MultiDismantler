@@ -14,14 +14,14 @@ def GMM(N):
     
     gamma1=2.5
     #gamma1=random.uniform(2, 3)
-    kbar1 = random.uniform(2.0, 10.0)
-    #kbar1 = 6
+    #kbar1 = random.uniform(2.0, 10.0)
+    kbar1 = 6
     T1 = 0.4
 
     gamma2 = 2.5
     #gamma2=random.uniform(2, 3)
-    kbar2 = random.uniform(2.0, 10.0)
-    #kbar2 = 6
+    #kbar2 = random.uniform(2.0, 10.0)
+    kbar2 = 6
     T2 = 0.4
     ####################################################################################
 

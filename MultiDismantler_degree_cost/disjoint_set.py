@@ -24,7 +24,6 @@ class DisjointSet:
           
             return node
 
-
     def merge(self, node1, node2):
       
         node1_root = self.find_root(node1)

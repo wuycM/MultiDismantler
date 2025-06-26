@@ -26,12 +26,7 @@ import os, sys
 import math
 import math
 os.chdir(sys.path[0])
-
-from MRGNN.encoders import Encoder
-from MRGNN.mutil_layer_weight import LayerNodeAttention_weight, Cosine_similarity, SemanticAttention, \
-    BitwiseMultipyLogis
-from MRGNN.aggregators import MeanAggregator, LSTMAggregator, PoolAggregator
-
+from mutil_layer_weight import BitwiseMultipyLogis
 # Hyper Parameters:
 GAMMA = 1  # decay rate of past observations
 UPDATE_TIME = 1000
@@ -338,40 +333,6 @@ class MultiDismantler:
         else:
             return self.fit(sample.g_list, sample.list_st, sample.list_at, list_target, sample.list_st_edges)
 
-    def fit_with_prioritized(self, tree_idx, ISWeights, g_list, covered, actions, list_target):
-        '''
-        loss = 0.0
-        n_graphs = len(g_list)
-        i, j, bsize
-        for i in range(0,n_graphs,BATCH_SIZE):
-            bsize = BATCH_SIZE
-            if (i + BATCH_SIZE) > n_graphs:
-                bsize = n_graphs - i
-            batch_idxes = np.zeros(bsize)
-            # batch_idxes = []
-            for j in range(i, i + bsize):
-                batch_idxes[j-i] = j
-                # batch_idxes.append(j)
-            batch_idxes = np.int32(batch_idxes)
-
-            self.SetupTrain(batch_idxes, g_list, covered, actions,list_target)
-            my_dict = {}
-            my_dict[self.action_select] = self.inputs['action_select']
-            my_dict[self.rep_global] = self.inputs['rep_global']
-            my_dict[self.n2nsum_param] = self.inputs['n2nsum_param']
-            my_dict[self.laplacian_param] = self.inputs['laplacian_param']
-            my_dict[self.subgsum_param] = self.inputs['subgsum_param']
-            my_dict[self.aux_input] = np.array(self.inputs['aux_input'])
-            my_dict[self.ISWeights] = np.mat(ISWeights).T
-            my_dict[self.target] = self.inputs['target']
-
-            result = self.session.run([self.trainStep,self.TD_errors,self.loss],feed_dict=my_dict)
-            self.nStepReplayMem.batch_update(tree_idx, result[1])
-            loss += result[2]*bsize
-        return loss / len(g_list)
-        '''
-        return None
-
     def fit(self, g_list, covered, actions, list_target, remove_edges):
         loss_values = 0.0
         n_graphs = len(g_list)
@@ -404,9 +365,6 @@ class MultiDismantler:
         return loss_values / len(g_list)
 
     def calc_loss(self, q_pred, cur_message_layer):
-        # first order reconstruction loss
-        # OLD loss_recons = 2 * torch.trace(torch.matmul(torch.transpose(cur_message_layer,0,1),\
-        #    torch.matmul(self.inputs['laplacian_param'], cur_message_layer)))
         loss = torch.zeros(1, device=self.device)
         loss1 = torch.zeros(1, device=self.device)
         loss2 = torch.zeros(1, device=self.device)

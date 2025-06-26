@@ -5,11 +5,6 @@ import torch.nn.functional as F
 import torch.optim as optim
 import torch_sparse
 import numpy as np
-from MRGNN.encoders import Encoder
-from MRGNN.aggregators import MeanAggregator, LSTMAggregator, PoolAggregator
-from MRGNN.utils import LogisticRegression
-from MRGNN.mutil_layer_weight import LayerNodeAttention_weight, Cosine_similarity, SemanticAttention, \
-    BitwiseMultipyLogis
 import sys
 class MultiDismantler_net(nn.Module):
     def __init__(self, layerNodeAttention_weight,
