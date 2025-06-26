@@ -571,8 +571,7 @@ class MultiDismantler:
         save_dir_local, "NormalizedLMCC", test_name.split('.')[0], layers[0], layers[1], 'txt')
         result_file3 = '%s/%s_%s_%s%s.%s' % (
         save_dir_local, "Cost", test_name.split('.')[0], layers[0], layers[1], 'txt')
-        layers_matrix, graphs = self.read_multiplex(
-            "../../data/real/%s" % (test_name), num_nodes)
+        layers_matrix, graphs = self.read_multiplex(data_test, num_nodes)
         g = graph.Graph_test(graphs[layers[0] - 1], graphs[layers[1] - 1])
         with open(result_file1, 'w') as f_out:
             print('testing')

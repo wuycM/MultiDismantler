@@ -38,20 +38,20 @@ if [ "$address_dirtory" = "MultiDismantler_degree_cost" ]; then
      # training
         python -u ./MultiDismantler_degree_cost/train.py 
      elif [ "$input_filename" = "testReal" ]; then
-        python -u ./MultiDismantler_degree_cost/testReal.py  --output "../../results/degreecost/MultiDismantler_real"
+        python -u ./MultiDismantler_degree_cost/testReal.py  --output "../results/degreecost/MultiDismantler_real"
      elif [ "$input_filename" = "testSynthetic" ]; then
-        python -u ./MultiDismantler_degree_cost/testSynthetic.py --output "../../results/degreecost/MultiDismantler_syn/"
+        python -u ./MultiDismantler_degree_cost/testSynthetic.py --output "../results/degreecost/MultiDismantler_syn/"
      elif  [ "$input_filename" = "drawLmcc" ]; then
-        python -u ./MultiDismantler_degree_cost/drawWeight.py --output "../../results/degreecost/MultiDismantler_audc/"
+        python -u ./MultiDismantler_degree_cost/drawWeight.py --output "../results/degreecost/MultiDismantler_audc/"
      fi
 elif [ "$address_dirtory" = "MultiDismantler_unit_cost" ]; then
      if [ "$input_filename" = "train" ]; then
      # training
         python -u ./MultiDismantler_unit_cost/train.py 
      elif [ "$input_filename" = "testReal" ]; then
-        python -u ./MultiDismantler_unit_cost/testReal.py --output "../../results/unitcost/MultiDismantler_real"
+        python -u ./MultiDismantler_unit_cost/testReal.py --output "../results/unitcost/MultiDismantler_real"
      elif [ "$input_filename" = "testSynthetic" ]; then
-        python -u ./MultiDismantler_unit_cost/testSynthetic.py --output "../../results/unitcost/MultiDismantler_syn/"
+        python -u ./MultiDismantler_unit_cost/testSynthetic.py --output "../results/unitcost/MultiDismantler_syn/"
      elif [ "$input_filename" = "drawLmcc" ]; then
         python -u ./MultiDismantler_unit_cost/drawUnweight.py --output "../results/unitcost/MultiDismantler_audc/"
      fi

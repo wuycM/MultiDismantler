@@ -21,37 +21,14 @@ def GetSolution(STEPRATIO, MODEL_FILE):
     ######################################################################################################################
     ##................................................Get Solution (model).....................................................
     dqn = MultiDismantler()
-    # data_test_path = './data/real/'
-    data_test_path = "../data/multiplex_edges/"
-    # data_test_name = ['fao_trade_multiplex',
-    #                   'celegans_connectome_multiplex',
-    #                   'drosophila_melanogaster_multiplex',
-    #                   'fb-tw',
-    #                   'sacchpomb_genetic_multiplex',
-    #                   'homo_genetic_multiplex',
-    #                   'Sanremo2016_final_multiplex',
-    #                   ]
-    # date_test_n = [214,279,557,1043,4092,18222,56562]
-    # data_test_layer = [(3,24),(2,3),(5,6),(1,2),(4,6),(1,2),(1,2)]
-    data_test_name = [
-                     'fao_trade_multiplex',
-                      # 'homo_genetic_multiplex',
-                      # 'Sanremo2016_final_multiplex',
-                      ]
-    date_test_n = [214,18222, 56562]
-    data_test_layer = [(3,24),(1, 2), (1, 2)]
-    
-    # data_test_name = ['us_air_transportation_american_delta_multiplex','celegans_connectome_multiplex',
-    #                   'drosophila_melanogaster_multiplex','netsci_co-authorship_multiplex']
-    # date_test_n = [84,279,557,1400]
-    # data_test_layer = [(1,2),(2,3),(5,6),(1,2)]
-    
-    # data_test_name = ['fao_trade_multiplex']
-    # date_test_n = [214]
-    # data_test_layer = [(3,24)]
+    data_test_path = '../real-world-data/'
+    data_test_name = ['us_air_transportation_american_delta_multiplex','fao_trade_multiplex',
+                      'celegans_connectome_multiplex','drosophila_melanogaster_multiplex','fb-tw','netsci_co-authorship_multiplex',
+                      'sacchpomb_genetic_multiplex','homo_genetic_multiplex','Sanremo2016_final_multiplex']
+    date_test_n = [84,214,279,557,1043,1400,4092,18222,56562]
+    data_test_layer = [(1,2), (3,24),(2,3),(5,6),(1,2),(1,2),(4,6),(1,2),(1,2)]
     
     model_file = './models/{}'.format(MODEL_FILE)
-    #save_dir = './results/FINDER_ND_weightQ/g0.5-degree'
     save_dir = args['output']
     if not os.path.exists(save_dir):
         os.makedirs(save_dir, exist_ok=True)
@@ -75,7 +52,6 @@ def GetSolution(STEPRATIO, MODEL_FILE):
         
 
 def main():
-    # model_file_ckpt = 'g0.5_degree_TORCH-Model_{}_30_50/nrange_30_50_iter_100000.ckpt'.format(g_type)
     model_file_ckpt = 'nrange_30_50_iter_100000.ckpt'.format(g_type)
     GetSolution(0, model_file_ckpt)
 

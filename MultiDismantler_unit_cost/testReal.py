@@ -23,10 +23,12 @@ def GetSolution(STEPRATIO, MODEL_FILE):
     ######################################################################################################################
     ##................................................Get Solution (model).....................................................
     dqn = MultiDismantler()
-    data_test_path = './data/real/'
-    data_test_name = ['fao_trade_multiplex','celegans_connectome_multiplex','fb-tw','homo_genetic_multiplex','sacchpomb_genetic_multiplex','Sanremo2016_final_multiplex']
-    date_test_n = [214,279,1043,18222,4092,56562]
-    data_test_layer = [(3,24),(2,3),(1,2),(1,2),(4,6),(1,2)]
+    data_test_path = '../real-world-data/'
+    data_test_name = ['us_air_transportation_american_delta_multiplex','fao_trade_multiplex',
+                      'celegans_connectome_multiplex','drosophila_melanogaster_multiplex','fb-tw','netsci_co-authorship_multiplex',
+                      'sacchpomb_genetic_multiplex','homo_genetic_multiplex','Sanremo2016_final_multiplex']
+    date_test_n = [84,214,279,557,1043,1400,4092,18222,56562]
+    data_test_layer = [(1,2), (3,24),(2,3),(5,6),(1,2),(1,2),(4,6),(1,2),(1,2)]
     ap = argparse.ArgumentParser()
     ap.add_argument("-o", "--output", required=True,
                 help="path to output file")
@@ -56,8 +58,7 @@ def GetSolution(STEPRATIO, MODEL_FILE):
         df.to_csv(save_dir_local + '/time&audc_%s.csv'% data_test_name[j], encoding='utf-8', index=False)
 
 
-def main():
-    outputpath = f"{args['output']}"    
+def main():  
     model_file_ckpt = 'g0.5_TORCH-Model_{}_30_50/nrange_30_50_iter_100000.ckpt'.format(g_type)
     GetSolution(0, model_file_ckpt)
 
