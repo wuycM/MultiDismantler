@@ -34,4 +34,6 @@ The only difference between the following commands and the above commands is tha
 ~~~~ 
 ~~~~ {.sourceCode .shell}
 ./run.sh MultiDismantler_degree_cost drawLmcc
-~~~~ 
+~~~~
+
+This project is based on the original [Finder](https://github.com/FFrankyy/FINDER). We sincerely thank the authors for making their code publicly available.
