@@ -414,7 +414,7 @@ class MultiDismantler:
             eps = eps_end + max(0., (eps_start - eps_end) * (eps_step - iter) / eps_step)
             if iter % 10 == 0:
                 self.PlayGame(10, eps)
-            if iter % 10000 == 0:
+            if iter % 500 == 0:
                 if(iter == 0 or iter == start_iter):
                     N_start = start
                 else:

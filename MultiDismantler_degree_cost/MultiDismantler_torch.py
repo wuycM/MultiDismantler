@@ -397,7 +397,7 @@ class MultiDismantler:
         eps_step = 10000.0
         loss = 0
 
-        save_dir = './models/g0.5_degree_3_TORCH-Model_%s_%s_%s' % (self.g_type, NUM_MIN, NUM_MAX)
+        save_dir = './models/g0.5_degree_TORCH-Model_%s_%s_%s' % (self.g_type, NUM_MIN, NUM_MAX)
         if not os.path.exists(save_dir):
             os.mkdir(save_dir)
         VCFile = '%s/ModelVC_%d_%d.csv' % (save_dir, NUM_MIN, NUM_MAX)
@@ -431,7 +431,7 @@ class MultiDismantler:
             eps = eps_end + max(0., (eps_start - eps_end) * (eps_step - iter) / eps_step)
             if iter % 10 == 0:
                 self.PlayGame(10, eps)
-            if iter % 10000 == 0:
+            if iter % 500 == 0:
                 if (iter == 0 or iter == start_iter):
                     N_start = start
                 else:
